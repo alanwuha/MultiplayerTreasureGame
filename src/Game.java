@@ -107,6 +107,94 @@ public class Game {
 		return true;
 	}
 	
+	public void makeMove(char keyString, String playerName) {
+		// Update
+		// Get reference to player
+		Player p = new Player();
+		boolean playerFound = false;
+		for(int i = 0; i < players.size(); ++i) {
+			// Get reference of requesting player
+			p = players.get(i);
+			playerFound = true;
+			break;
+		}
+		
+		// If player doesn't exist, return
+		if(!playerFound) {
+			return;
+		}
+		
+		// Move player
+		movePlayer(keyString, p);
+		
+		// Check if player has found a treasure
+		// This method implicitly assigns a new position for the collected treasure
+		foundTreasure(p);
+	}
+	
+	private void movePlayer(char keyString, Player p) {
+		// Check if move is valid (never hit wall and no collision)
+		switch(keyString) {
+		case '1':
+			if(p.x > 0 && !hasCollisionWithPlayer(p.x-1, p.y)) {
+				p.x--;
+			}
+			break;
+		case '2':
+			if(p.y < Game.N - 1 && !hasCollisionWithPlayer(p.x, p.y+1)) {
+				p.y++;
+			}
+			break;
+		case '3':
+			if(p.x < Game.N - 1 && !hasCollisionWithPlayer(p.x+1, p.y)) {
+				p.x++;
+			}
+			break;
+		case '4':
+			if(p.y > 0 && !hasCollisionWithPlayer(p.x, p.y-1)) {
+				p.y--;
+			}
+			break;
+		}
+		
+		// System.out.println("Player's location: " + p.x + ", " + p.y);
+	}
+	
+	private boolean hasCollisionWithPlayer(int posX, int posY) {
+		// Check for collision with every other player
+		boolean hasCollided = false;
+		
+		for(Player p : players) {
+			if(posX == p.x && posY == p.y) {
+				hasCollided = true;
+				System.out.println("Has collision with Player " + p.name);
+				break;
+			}
+		}
+		
+		return hasCollided;
+	}
+	
+	private void foundTreasure(Player player) {
+		// O(K*P)
+		for(Treasure t : treasures) {
+			if(player.x == t.x && player.y == t.y) {
+				// Update player's score
+				player.score++;
+				
+				// Set new location for treasure
+				Position pos = pickNewPosition();
+				
+				t.x = pos.x;
+				t.y = pos.y;
+				
+				System.out.println("Score: " + player.score);
+				
+				break;
+			}
+		}
+	}
+	
 	private Color getRandomColor() {
  		Random rand = new Random();
  		return new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
@@ -173,9 +261,15 @@ public class Game {
 		Scanner s = new Scanner(System.in);
 		char c = s.next().charAt(0);
 		while(c != '9') {
-			if(c == '0' || c == '2' || c == '3' || c == '4') {
-				// ...
+			if(c == '1' || c == '2' || c == '3' || c == '4') {
+				if(Game.players.firstElement().name.equals(playerName)) {
+					g.makeMove(c, playerName);
+				} else {
+					
+				}
 			}
+			
+			g.panel.repaint();
 			
 			// Get next user input
 			c = s.next().charAt(0);

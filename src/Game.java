@@ -111,7 +111,7 @@ public class Game implements GameRMI {
 	}
 	
 	@Override
-	public void makeMove(char keyString, String playerName) {
+	public MakeMoveReply makeMove(char keyString, String playerName) {
 		// Get reference to player
 		Player player = new Player();
 		boolean playerFound = false;
@@ -126,7 +126,7 @@ public class Game implements GameRMI {
 		
 		// If player doesn't exist, return
 		if(!playerFound) {
-			return;
+			return null;
 		}
 		
 		// Move player
@@ -135,6 +135,11 @@ public class Game implements GameRMI {
 		// Check if player has found a treasure
 		// This method implicitly assigns a new position for the collected treasure
 		foundTreasure(player);
+		
+		// Update backup server
+		updateBackupServer();
+		
+		return new MakeMoveReply(players, treasures);
 	}
 	
 	@Override
@@ -168,6 +173,12 @@ public class Game implements GameRMI {
 	@Override
 	public void spawnPingThread() {
 		// ...
+	}
+	
+	@Override
+	public void updateGameState(Vector<Player> players, Vector<Treasure> treasures) {
+		players = (Vector<Player>) players.clone();
+		treasures = (Vector<Treasure>) treasures.clone();
 	}
 	
 	public void assignNewServer() {
@@ -225,6 +236,17 @@ public class Game implements GameRMI {
 		}
 		
 		// System.out.println("Player's location: " + p.x + ", " + p.y);
+	}
+	
+	private void updateBackupServer() {
+		try {
+			if(players.size() > 1) {
+				GameRMI gRMI = (GameRMI) registry.lookup(players.get(1).name);
+				gRMI.updateGameState(players, treasures);
+			}
+		} catch (Exception e) {
+			System.out.println("updateBackupServer failed: Failed to updateBackupPlayer.");
+		}
 	}
 	
 	private boolean hasCollisionWithPlayer(int posX, int posY) {

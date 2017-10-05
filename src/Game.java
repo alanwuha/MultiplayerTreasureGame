@@ -19,6 +19,7 @@ public class Game implements GameRMI {
 	// Graphics
 	private JPanel panel;
 	private JFrame frame;
+	public boolean isRunning;
 	
 	// Players and treasures
 	private Vector<PlayerInfo> playersInfo = new Vector<PlayerInfo>();
@@ -38,6 +39,7 @@ public class Game implements GameRMI {
 		this.playerName = playerName;
 		this.trackerHost = trackerHost;
 		this.trackerPort = trackerPort;
+		this.isRunning = true;
 	};
 	
 	public boolean init() {
@@ -52,6 +54,7 @@ public class Game implements GameRMI {
 			// Bind self to registry
 			GameRMI gRMI = (GameRMI) UnicastRemoteObject.exportObject(this, 0);
 			registry.rebind(playerName, gRMI);	// Bind yourself to server's rmiregistry to receive replies
+			// Bind to registry thru Tracker remote method?
 			
 			// Lookup TrackerRMI remote object to get players list and game specs
 			trackerRMIRef = (TrackerRMI) registry.lookup("TrackerRMI");
@@ -77,8 +80,55 @@ public class Game implements GameRMI {
 					treasures.add(t);
 				}
 			} else {
-				// Contact server to join game and retrieve game state
-				// ...
+				boolean isConnected = false;
+				int i = 0;
+				// If server is uncontactable, iterate through other players to find the server
+				// playersInfo.size() - 1 so that player does not contact itself to joinGame
+				// but rather just the subsequent code to create a new game
+				while(!isConnected && i < playersInfo.size() - 1) {
+					try {					
+						System.out.println("Contacting Player \"" + playersInfo.get(i).name + "\" to join game...");
+						
+						// Lookup remote object to join game
+						gRMI = (GameRMI) registry.lookup(playersInfo.get(i).name);
+						GameState state = gRMI.joinGame(playerName, playerHost, playerPort);
+						
+						// Update game state
+						players = (Vector<Player>) state.players.clone();
+						treasures = (Vector<Treasure>) state.treasures.clone();
+						
+						isConnected = true;
+						
+						System.out.println("Successfully contact Player \"" + playersInfo.get(i).name + "\" to join game.");
+					} catch (Exception ee) {
+						System.out.println("Join game error: Failed to contact Player " + playersInfo.get(i).name + " to join game.");
+					}
+					
+					++i;
+				}
+					
+				if(!isConnected) {
+					try {
+						// Reset Tracker
+						trackerRMIRef.removeAllPreviousPlayers(this.playerName);
+						
+						// First player's position can be anywhere on the grid
+						Random random = new Random();
+						players.add(new Player(playerHost, playerPort, playerName, random.nextInt(Game.N - 1), random.nextInt(Game.N - 1), 0, getRandomColor()));
+						
+						// Generate treasures
+						for(int j = 0; j < Game.K; ++j) {
+							Treasure t = new Treasure();
+							Position pos = pickNewPosition();
+							t.x = pos.x;
+							t.y = pos.y;
+							treasures.add(t);
+						}
+						//screen.init(players, treasures);
+					} catch (Exception e) {
+						System.out.println("Game init error: Player " + this.playerName + " failed to removeAllPlayers on Tracker.");
+					}				
+				}
 			}
 			
 			// Create JPanel
@@ -95,8 +145,9 @@ public class Game implements GameRMI {
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
 			
-			// Spawn thread to perform pinging if player is primary
-			// ...
+			// SpawnPingThread
+			if(players.size() == 1) spawnPingThread();
+			
 		} catch (Exception e) {
 			System.err.println("Game: init() error.");
 			e.printStackTrace();
@@ -106,12 +157,47 @@ public class Game implements GameRMI {
 	}
 	
 	@Override
-	public void joinGame(String playerName, String playerHost, int playerPort) {
+	public GameState joinGame(String playerName, String playerHost, int playerPort) {
+		Player p = new Player(playerHost, playerPort, playerName, 0, 0, 0, getRandomColor());
 		
+		// Assign player a location
+		Position pos = pickNewPosition();
+		p.x = pos.x;
+		p.y = pos.y;
+		
+		// Add player to list
+		players.add(p);
+		
+		System.out.println("Player " + p.name + " has joined the game!");
+		
+		// If not primary server, assume role as server
+		if(!players.firstElement().name.equals(this.playerName)) {
+			while(!players.firstElement().name.equals(this.playerName)) {
+				leaveGame(players.firstElement().name);
+			}
+			
+			try {
+				// Also, remove old players from Tracker that might not have been removed through leaveGame()
+				trackerRMIRef.removeAllPreviousPlayers(this.playerName);
+			} catch (Exception e) {
+				System.err.println("Game makeMove failed: Failed to removeAllPreviousPlayers from Tracker.");
+			}
+			
+			// Spawn ping thread
+			spawnPingThread();
+		}
+		
+		// Repaint server's panel
+		panel.repaint();
+		
+		// Update backup server
+		updateBackupServer();
+		
+		return new GameState(players, treasures);
 	}
 	
 	@Override
-	public MakeMoveReply makeMove(char keyString, String playerName) {
+	public GameState makeMove(char keyString, String playerName) {
 		// Get reference to player
 		Player player = new Player();
 		boolean playerFound = false;
@@ -136,10 +222,30 @@ public class Game implements GameRMI {
 		// This method implicitly assigns a new position for the collected treasure
 		foundTreasure(player);
 		
+		// If not primary server, assume role as server
+		if(!players.firstElement().name.equals(this.playerName)) {
+			while(!players.firstElement().name.equals(this.playerName)) {
+				leaveGame(players.firstElement().name);
+			}
+			
+			try {
+				// Also, remove old players from Tracker that might not have been removed through leaveGame()
+				trackerRMIRef.removeAllPreviousPlayers(this.playerName);
+			} catch (Exception e) {
+				System.err.println("Game makeMove failed: Failed to removeAllPreviousPlayers from Tracker.");
+			}
+			
+			// Spawn ping thread
+			spawnPingThread();
+		}
+		
+		// Repaint panel
+		panel.repaint();
+		
 		// Update backup server
 		updateBackupServer();
 		
-		return new MakeMoveReply(players, treasures);
+		return new GameState(players, treasures);
 	}
 	
 	@Override
@@ -148,23 +254,35 @@ public class Game implements GameRMI {
 			// Remove player from primary server's players list
 			for(Player p : players) {
 				if(p.name.equals(playerName)) {
+					// If player exists, remove player
 					players.remove(p);
-					break;
+					
+					// Repaint panel
+					panel.repaint();
+					
+					// Update backup server
+					updateBackupServer();
+					
+					// Update tracker
+					trackerRMIRef.removePlayer(playerName, this.playerName);
+					
+					System.out.println("Player " + playerName + " has left the game!");
+					
+					return;
 				}
 			}
-			
-			trackerRMIRef.removePlayer(playerName, this.playerName);
-			
-			System.out.println("Player " + playerName + " has left the game!");
 		} catch (Exception e) {
 			System.out.println("leaveGame failed: Player " + this.playerName + "failed to contact Tracker to remove Player " + playerName);
 		}
 	}
 	
 	@Override
-	public void assignAsServer(Vector<Player> players, Vector<Treasure> treasures) {
+	public void assumeRoleAsServer(Vector<Player> players, Vector<Treasure> treasures) {
 		this.players = (Vector<Player>) players.clone();
 		this.treasures = (Vector<Treasure>) treasures.clone();
+		
+		// Repaint panel
+		panel.repaint();
 		
 		// Spawn ping thread
 		spawnPingThread();
@@ -172,13 +290,33 @@ public class Game implements GameRMI {
 	
 	@Override
 	public void spawnPingThread() {
-		// ...
+		System.out.println("spawnPingThread");
+		
+		// Spawn thread to run pings
+		Thread loop = new Thread() {
+			public void run() {
+				try {
+					pingAllPlayers();
+				} catch (Exception e) {
+					System.out.println("spawnPingThread error: " + e.getMessage());
+				}
+			}
+		};
+		
+		// Start thread
+		loop.start();
 	}
 	
 	@Override
+	public void ping() {}
+	
+	@Override
 	public void updateGameState(Vector<Player> players, Vector<Treasure> treasures) {
-		players = (Vector<Player>) players.clone();
-		treasures = (Vector<Treasure>) treasures.clone();
+		this.players = (Vector<Player>) players.clone();
+		this.treasures = (Vector<Treasure>) treasures.clone();
+		
+		// Repaint panel
+		panel.repaint();
 	}
 	
 	public void assignNewServer() {
@@ -186,9 +324,32 @@ public class Game implements GameRMI {
 			try {
 				// Update next player's game state
 				GameRMI nextPlayerRMI = (GameRMI) registry.lookup(players.firstElement().name);
-				nextPlayerRMI.assignAsServer(players, treasures);
+				nextPlayerRMI.assumeRoleAsServer(players, treasures);
 			} catch (Exception e) {
 				System.out.println("assignNewServer failed: Player " + this.playerName + "failed to contact backup Player " + playerName);
+			}
+		}
+	}
+	
+	public void contactServerToMove(char c) {
+		for(Player p : players) {
+			try {
+				GameRMI serverGameRMIRef = (GameRMI) registry.lookup(p.name);
+				GameState reply = serverGameRMIRef.makeMove(c, playerName);
+				
+				// Update game state
+				players = (Vector<Player>) reply.players.clone();
+				treasures = (Vector<Treasure>) reply.treasures.clone();
+				
+				return;
+			} catch (Exception e) {
+				System.out.println("contactServerToMove failed: Primary Player " + p.name + " could not be contacted. Contacting next player...");
+				
+				try {
+					Thread.sleep(10);
+				} catch (Exception e2) {
+					
+				}
 			}
 		}
 	}
@@ -207,6 +368,35 @@ public class Game implements GameRMI {
 			registry.unbind(playerName);
 		} catch (Exception e) {
 			System.err.println("Game unbind() failed.");
+		}
+	}
+	
+	private void pingAllPlayers() throws InterruptedException {
+		while(isRunning) {
+			// Ping all players
+			for(int i = 0; i < players.size(); ++i) {
+				if(players.get(i).name.equals(this.playerName)) continue;
+				
+				try {
+					GameRMI gRMI = (GameRMI) registry.lookup(players.get(i).name);
+					gRMI.ping();
+				} catch (Exception e) {
+					try {
+						// Ping failed meaning player has crashed
+						// Remove player from list
+						System.out.println("Ping to Player " + players.get(i).name + " failed. Removing Player " + players.get(i).name);
+						leaveGame(players.get(i).name);	// Leave game implicitly removes player from Tracker
+					}
+					catch (Exception e2) {
+						System.out.println("pingAllPlayers: Array index out of bounds or leaveGame() error.");
+					}
+					
+					updateBackupServer();
+				}
+			}
+			
+			// Sleep for 0.5 seconds after each iteration of pings
+			Thread.sleep(500);
 		}
 	}
 	
@@ -239,13 +429,15 @@ public class Game implements GameRMI {
 	}
 	
 	private void updateBackupServer() {
-		try {
-			if(players.size() > 1) {
-				GameRMI gRMI = (GameRMI) registry.lookup(players.get(1).name);
+		if(players.size() >= 2) {
+			String playerName = (!players.firstElement().name.equals(this.playerName)) ? players.firstElement().name : players.get(1).name;
+			
+			try {
+				GameRMI gRMI = (GameRMI) registry.lookup(playerName);
 				gRMI.updateGameState(players, treasures);
+			} catch (Exception e) {
+				System.out.println("updateBackupServer failed: Failed to updateBackupPlayer.");
 			}
-		} catch (Exception e) {
-			System.out.println("updateBackupServer failed: Failed to updateBackupPlayer.");
 		}
 	}
 	
@@ -350,11 +542,12 @@ public class Game implements GameRMI {
 		Scanner s = new Scanner(System.in);
 		char c = s.next().charAt(0);
 		while(c != '9') {
-			if(c == '0' || c == '1' || c == '2' || c == '3' || c == '4') {
+			if(c == '0' || c == '1' || c == '2' || c == '3' || c == '4') {				
+				// Update game state if not server
 				if(Game.players.firstElement().name.equals(playerName)) {
 					g.makeMove(c, playerName);
 				} else {
-					
+					g.contactServerToMove(c);
 				}
 				
 				g.panel.repaint();
@@ -366,6 +559,8 @@ public class Game implements GameRMI {
 		
 		// Close scanner
 		s.close();
+		
+		g.isRunning = false;
 		
 		// Notify tracker to quit game
 		// leaveGame() implicitly notifies Tracker to remove player from its list

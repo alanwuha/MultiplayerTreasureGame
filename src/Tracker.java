@@ -47,9 +47,7 @@ public class Tracker implements TrackerRMI {
 		printPlayers();
 	}
 	
-	public void removeAllPreviousPlayers(String myName, String serverName) {	
-		System.out.println("Removing Player " + myName + " by Player " + serverName);
-		
+	public void removeAllPreviousPlayers(String myName) {		
 		for(PlayerInfo p : players) {
 			if(!p.name.equals(myName)) {
 				System.out.println("Removing Player " + p.name + " by Player " + myName);

@@ -1,0 +1,153 @@
+C:\Users\TLaiChia\Documents\Eclipse_Oxygen\DistributedMazeGame2\bin>java Tracker 2001 15 10
+Tracker's IP Host Address: 127.0.0.1
+Tracker Ready
+Player ab (127.0.0.1) has joined the game!
+Player ac (127.0.0.1) has joined the game!
+Player ad (127.0.0.1) has joined the game!
+Player ae (127.0.0.1) has joined the game!
+Removing Player ae by Player ab
+Player ae has left! Number of players online: 3
+ab ac ad
+Removing Player ad by Player ab
+Player ad has left! Number of players online: 2
+ab ac
+Player ag (127.0.0.1) has joined the game!
+Removing Player ab by Player ac
+Player ab has left! Number of players online: 2
+ac ag
+ac ag
+Player ai (127.0.0.1) has joined the game!
+Player aj (127.0.0.1) has joined the game!
+Player ak (127.0.0.1) has joined the game!
+Removing Player ag by Player ac
+Player ag has left! Number of players online: 4
+ac ai aj ak
+Removing Player ak by Player ac
+Player ak has left! Number of players online: 3
+ac ai aj
+Removing Player ai by Player ac
+Player ai has left! Number of players online: 2
+ac aj
+Player al (127.0.0.1) has joined the game!
+Player an (127.0.0.1) has joined the game!
+Player ao (127.0.0.1) has joined the game!
+Removing Player ac by Player aj
+Player ac has left! Number of players online: 4
+aj al an ao
+aj al an ao
+Player aq (127.0.0.1) has joined the game!
+Player as (127.0.0.1) has joined the game!
+Removing Player aj by Player al
+Player aj has left! Number of players online: 5
+al an ao aq as
+al an ao aq as
+Removing Player an by Player al
+Player an has left! Number of players online: 4
+al ao aq as
+Player at (127.0.0.1) has joined the game!
+Removing Player aq by Player al
+Player aq has left! Number of players online: 4
+al ao as at
+Player au (127.0.0.1) has joined the game!
+Removing Player at by Player al
+Player at has left! Number of players online: 4
+al ao as au
+Removing Player au by Player al
+Player au has left! Number of players online: 3
+al ao as
+Removing Player as by Player al
+Player as has left! Number of players online: 2
+al ao
+Player aw (127.0.0.1) has joined the game!
+Player ax (127.0.0.1) has joined the game!
+Player ay (127.0.0.1) has joined the game!
+Removing Player ao by Player al
+Player ao has left! Number of players online: 4
+al aw ax ay
+Removing Player aw by Player al
+Player aw has left! Number of players online: 3
+al ax ay
+Removing Player ax by Player al
+Player ax has left! Number of players online: 2
+al ay
+Player az (127.0.0.1) has joined the game!
+Player ba (127.0.0.1) has joined the game!
+Player bb (127.0.0.1) has joined the game!
+Removing Player al by Player ay
+Player al has left! Number of players online: 4
+ay az ba bb
+ay az ba bb
+Removing Player ay by Player az
+Player ay has left! Number of players online: 3
+az ba bb
+az ba bb
+Removing Player ba by Player az
+Player ba has left! Number of players online: 2
+az bb
+Player bc (127.0.0.1) has joined the game!
+Player bd (127.0.0.1) has joined the game!
+Removing Player bb by Player az
+Player bb has left! Number of players online: 3
+az bc bd
+Player be (127.0.0.1) has joined the game!
+Player bf (127.0.0.1) has joined the game!
+Removing Player az by Player bc
+Player az has left! Number of players online: 4
+bc bd be bf
+bc bd be bf
+Removing Player bd by Player bc
+Player bd has left! Number of players online: 3
+bc be bf
+Removing Player bf by Player bc
+Player bf has left! Number of players online: 2
+bc be
+Player bg (127.0.0.1) has joined the game!
+Removing Player be by Player bc
+Player be has left! Number of players online: 2
+bc bg
+Player bh (127.0.0.1) has joined the game!
+Removing Player bc by Player bg
+Player bc has left! Number of players online: 2
+bg bh
+bg bh
+Player bj (127.0.0.1) has joined the game!
+Player bk (127.0.0.1) has joined the game!
+Player bl (127.0.0.1) has joined the game!
+Removing Player bh by Player bg
+Player bh has left! Number of players online: 4
+bg bj bk bl
+Player bm (127.0.0.1) has joined the game!
+Removing Player bk by Player bg
+Player bk has left! Number of players online: 4
+bg bj bl bm
+Removing Player bl by Player bg
+Player bl has left! Number of players online: 3
+bg bj bm
+Removing Player bm by Player bg
+Player bm has left! Number of players online: 2
+bg bj
+Player bn (127.0.0.1) has joined the game!
+Removing Player bg by Player bj
+Player bg has left! Number of players online: 2
+bj bn
+bj bn
+Player bo (127.0.0.1) has joined the game!
+Player bp (127.0.0.1) has joined the game!
+Player bq (127.0.0.1) has joined the game!
+Removing Player bj by Player bn
+Player bj has left! Number of players online: 4
+bn bo bp bq
+bn bo bp bq
+Removing Player bq by Player bn
+Player bq has left! Number of players online: 3
+bn bo bp
+Player br (127.0.0.1) has joined the game!
+Player bs (127.0.0.1) has joined the game!
+Removing Player bp by Player bn
+Player bp has left! Number of players online: 4
+bn bo br bs
+Player bt (127.0.0.1) has joined the game!
+Removing Player bs by Player bn
+Player bs has left! Number of players online: 4
+bn bo br bt
+Player bw (127.0.0.1) has joined the game!

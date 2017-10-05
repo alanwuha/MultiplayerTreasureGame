@@ -1,0 +1,26 @@
+Welcome to the game!
+Contacting Player "ab" to join game...
+Successfully contact Player "ab" to join game.
+Player ag has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer.
+Player ab has left the game!
+spawnPingThread
+updateBackupServer failed: Failed to updateBackupPlayer.
+Player ai has joined the game!
+Player aj has joined the game!
+Player ak has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer.
+updateBackupServer failed: Failed to updateBackupPlayer.
+Ping to Player ag failed. Removing Player ag
+updateBackupServer failed: Failed to updateBackupPlayer.
+Player ag has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer.
+updateBackupServer failed: Failed to updateBackupPlayer.
+Has collision with Player ac
+Score: 1
+Ping to Player ak failed. Removing Player ak
+Player ak has left the game!
+Ping to Player ai failed. Removing Player ai
+Player ai has left the game!
+Player al has joined the game!
+Player an has joined the game!

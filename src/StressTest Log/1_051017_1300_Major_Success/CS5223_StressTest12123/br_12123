@@ -1,0 +1,7 @@
+Welcome to the game!
+Contacting Player "bn" to join game...
+Successfully contact Player "bn" to join game.
+Exception in thread "main" java.util.NoSuchElementException
+	at java.util.Scanner.throwFor(Unknown Source)
+	at java.util.Scanner.next(Unknown Source)
+	at Game.main(Game.java:557)

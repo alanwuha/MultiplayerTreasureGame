@@ -11,6 +11,8 @@ import javax.swing.JPanel;
 
 public class Game implements GameRMI {
 	// Game variables
+	public final static int lowestPortNum = 2002;
+	public static int playerID = 0;
 	public static int cellSize;
 	public static int N;
 	public static int K;
@@ -19,7 +21,7 @@ public class Game implements GameRMI {
 	// Graphics
 	private JPanel panel;
 	private JFrame frame;
-	public boolean isRunning;
+	private boolean isRunning;
 	
 	// Players and treasures
 	private Vector<PlayerInfo> playersInfo = new Vector<PlayerInfo>();
@@ -40,26 +42,26 @@ public class Game implements GameRMI {
 		this.trackerHost = trackerHost;
 		this.trackerPort = trackerPort;
 		this.isRunning = true;
+		this.playerID++;
 	};
 	
 	public boolean init() {
 		try {
 			// Get player host and port
 			playerHost = InetAddress.getLocalHost().getHostAddress();
-			playerPort = trackerPort;
+			playerPort = (playerID % 10) + lowestPortNum;
 			
 			// Locate registry
-			this.registry = LocateRegistry.getRegistry(trackerHost, trackerPort);
+			registry = LocateRegistry.getRegistry(trackerHost, trackerPort);
 			
 			// Bind self to registry
-			GameRMI gRMI = (GameRMI) UnicastRemoteObject.exportObject(this, 1099);
-			registry.rebind(playerName, gRMI);	// Bind yourself to server's rmiregistry to receive replies
-			// Bind to registry thru Tracker remote method?
+			GameRMI gRMI = (GameRMI) UnicastRemoteObject.exportObject(this, 0);
 			
 			// Lookup TrackerRMI remote object to get players list and game specs
 			trackerRMIRef = (TrackerRMI) registry.lookup("TrackerRMI");
-			AddPlayerReply reply = trackerRMIRef.addPlayer(playerHost, playerPort, playerName);
-			this.playersInfo = (Vector<PlayerInfo>) reply.players.clone();
+			AddPlayerReply reply = trackerRMIRef.addPlayer(InetAddress.getLocalHost().getHostAddress(), trackerPort, playerName, gRMI);
+			
+			playersInfo = (Vector<PlayerInfo>) reply.players.clone();
 			Game.N = reply.N;
 			Game.K = reply.K;
 			Game.cellSize = reply.cellSize;
@@ -533,6 +535,7 @@ public class Game implements GameRMI {
 		
 		// Create game
 		Game g = new Game(playerName, trackerHost, trackerPort);
+		
 		if(!g.init()) {
 			System.err.println("Main: Failed to initialize Game.");
 			System.exit(-1);
@@ -575,11 +578,8 @@ public class Game implements GameRMI {
 			g.requestToLeaveGame();
 		}
 		
-		// Unbind from registry
-		g.unbind();
-		
 		// Exit program
 		System.out.println("Exiting program...");
-		System.exit(0);
-	}	
+		System.exit(0);	
+	}
 }

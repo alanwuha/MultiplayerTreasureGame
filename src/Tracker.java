@@ -1,5 +1,4 @@
 import java.net.InetAddress;
-import java.rmi.Remote;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -7,32 +6,35 @@ import java.util.Vector;
 
 public class Tracker implements TrackerRMI {
 	private Vector<PlayerInfo> players;
+	private int port;
 	private int N;
 	private int K;
 	private int cellSize;
-	
-	public Registry registry;
+	private Registry registry;
 	
 	public Tracker(int port, int N, int K, int cellSize) {
+		this.port = port;
 		this.players = new Vector<PlayerInfo>();
 		this.N = N;
 		this.K = K;
 		this.cellSize = cellSize;
 		
-		try {System.out.println("Tracker's IP Host Address: " + InetAddress.getLocalHost().getHostAddress());
+		try {
+			System.out.println("Tracker's IP Host Address: " + InetAddress.getLocalHost().getHostAddress());
+			registry = LocateRegistry.getRegistry(port);
 		} catch (Exception e) {
 			System.out.println("Error");
 		}
 	}
 		
-	public AddPlayerReply addPlayer(String myHost, int myPort, String myName) {	
-		/*// Bind player to registry
+	public AddPlayerReply addPlayer(String myHost, int myPort, String myName, GameRMI g) {	
+		// Bind player to registry
 		try {
 			registry.rebind(myName, g);
 		} catch (Exception e) {
 			System.err.println("Bind error :(");
 			e.printStackTrace();
-		}*/
+		}
 		
 		// Add player (Check if host and port combination is unique? Probably not...)
 		players.add(new PlayerInfo(myHost, myPort, myName));
@@ -96,7 +98,6 @@ public class Tracker implements TrackerRMI {
 
 		try {
 			Tracker t = new Tracker(port, N, K, 30);
-			t.registry = registry;
 			stub = (TrackerRMI) UnicastRemoteObject.exportObject(t, 0);
 			registry = LocateRegistry.getRegistry(port);
 			registry.bind("TrackerRMI", stub);

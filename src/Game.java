@@ -52,7 +52,7 @@ public class Game implements GameRMI {
 			this.registry = LocateRegistry.getRegistry(trackerHost, trackerPort);
 			
 			// Bind self to registry
-			GameRMI gRMI = (GameRMI) UnicastRemoteObject.exportObject(this, 0);
+			GameRMI gRMI = (GameRMI) UnicastRemoteObject.exportObject(this, 1099);
 			registry.rebind(playerName, gRMI);	// Bind yourself to server's rmiregistry to receive replies
 			// Bind to registry thru Tracker remote method?
 			
@@ -90,8 +90,8 @@ public class Game implements GameRMI {
 						System.out.println("Contacting Player \"" + playersInfo.get(i).name + "\" to join game...");
 						
 						// Lookup remote object to join game
-						gRMI = (GameRMI) registry.lookup(playersInfo.get(i).name);
-						GameState state = gRMI.joinGame(playerName, playerHost, playerPort);
+						GameRMI g = (GameRMI) registry.lookup(playersInfo.get(i).name);
+						GameState state = g.joinGame(playerName, playerHost, playerPort);
 						
 						// Update game state
 						players = (Vector<Player>) state.players.clone();

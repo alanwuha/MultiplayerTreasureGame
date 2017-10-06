@@ -1,0 +1,26 @@
+Welcome to the game!
+Contacting Player "ab" to join game...
+Successfully contact Player "ab" to join game.
+contactServerToMove failed: Primary Player ab could not be contacted. Contacting next player...
+Has collision with Player ab
+Player ab has left the game!
+spawnPingThread
+Player ag has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player ag
+Player ai has joined the game!
+Player aj has joined the game!
+Player ak has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player ag
+updateBackupServer failed: Failed to updateBackupPlayer Player ag
+Ping to Player ag failed. Removing Player ag
+Player ag has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player ag
+Score: 1
+Ping to Player ak failed. Removing Player ak
+Player ak has left the game!
+Ping to Player ai failed. Removing Player ai
+Player ai has left the game!
+Score: 1
+Player al has joined the game!
+Has collision with Player aj
+Player an has joined the game!

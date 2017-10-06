@@ -1,0 +1,32 @@
+Welcome to the game!
+Contacting Player "bc" to join game...
+Successfully contact Player "bc" to join game.
+Player bh has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bh
+Player bc has left the game!
+spawnPingThread
+updateBackupServer failed: Failed to updateBackupPlayer Player bh
+Score: 1
+Player bj has joined the game!
+Player bk has joined the game!
+Player bl has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bh
+updateBackupServer failed: Failed to updateBackupPlayer Player bh
+Ping to Player bh failed. Removing Player bh
+Player bh has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bh
+updateBackupServer failed: Failed to updateBackupPlayer Player bh
+Score: 1
+Has collision with Player bg
+Has collision with Player bk
+Score: 1
+Player bm has joined the game!
+Ping to Player bk failed. Removing Player bk
+Player bk has left the game!
+Ping to Player bl failed. Removing Player bl
+Player bl has left the game!
+Score: 2
+Score: 3
+Has collision with Player bj
+Ping to Player bm failed. Removing Player bm
+Player bm has left the game!

@@ -1,0 +1,34 @@
+Welcome to the game!
+Contacting Player "ay" to join game...
+Join game error: Failed to contact Player ay to join game.
+Contacting Player "az" to join game...
+Successfully contact Player "az" to join game.
+contactServerToMove failed: Primary Player az could not be contacted. Contacting next player...
+contactServerToMove failed: Primary Player ba could not be contacted. Contacting next player...
+contactServerToMove failed: Primary Player bb could not be contacted. Contacting next player...
+updateBackupServer failed: Failed to updateBackupPlayer Player ba
+updateBackupServer failed: Failed to updateBackupPlayer Player ba
+Player az has left the game!
+Player az has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bb
+Player ba has left the game!
+spawnPingThread
+Game makeMove failed: Failed to removeAllPreviousPlayers from Tracker.
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+Player bb has left the game!
+spawnPingThread
+Ping to Player bd failed. Removing Player bd
+Player bd has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+pingAllPlayers: Array index out of bounds or leaveGame() error.
+Player be has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player be
+Score: 1
+Player bg has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player be
+Ping to Player be failed. Removing Player be
+Ping to Player bg failed. Removing Player bg
+Player bg has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bg
+Player be has left the game!

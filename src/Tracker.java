@@ -39,7 +39,7 @@ public class Tracker implements TrackerRMI {
 		// Add player (Check if host and port combination is unique? Probably not...)
 		players.add(new PlayerInfo(myHost, myPort, myName));
 		
-		System.out.println("Player " + myName + " (" + myHost + ") has joined the game!");
+		System.out.println("Player " + myName + " (" + myHost + ") has joined the game! Number of players online: " + players.size());
 		
 		// Reply client
 		return new AddPlayerReply(players, N, K, cellSize);

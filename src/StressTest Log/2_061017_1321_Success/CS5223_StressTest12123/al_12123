@@ -1,0 +1,45 @@
+Welcome to the game!
+Contacting Player "ac" to join game...
+Successfully contact Player "ac" to join game.
+contactServerToMove failed: Primary Player aj could not be contacted. Contacting next player...
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+Player aq has joined the game!
+Player as has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+Player aj has left the game!
+spawnPingThread
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+Ping to Player an failed. Removing Player an
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+Player an has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+Player at has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player an
+Score: 1
+Ping to Player aq failed. Removing Player aq
+Player aq has left the game!
+Player au has joined the game!
+Ping to Player at failed. Removing Player at
+Player at has left the game!
+Ping to Player au failed. Removing Player au
+Player au has left the game!
+Ping to Player as failed. Removing Player as
+Player as has left the game!
+Player aw has joined the game!
+Player ax has joined the game!
+Player ay has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player ao
+updateBackupServer failed: Failed to updateBackupPlayer Player ao
+Ping to Player ao failed. Removing Player ao
+Player ao has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player ao
+Has collision with Player ay
+Ping to Player aw failed. Removing Player aw
+Player aw has left the game!
+Ping to Player ax failed. Removing Player ax
+Player ax has left the game!
+Has collision with Player ay

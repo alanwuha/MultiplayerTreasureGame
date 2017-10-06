@@ -22,6 +22,7 @@ public class Game implements GameRMI {
 	private JPanel panel;
 	private JFrame frame;
 	private boolean isRunning;
+	private boolean hasSpawnedPingThread;
 	
 	// Players and treasures
 	private Vector<PlayerInfo> playersInfo = new Vector<PlayerInfo>();
@@ -42,6 +43,7 @@ public class Game implements GameRMI {
 		this.trackerHost = trackerHost;
 		this.trackerPort = trackerPort;
 		this.isRunning = true;
+		this.hasSpawnedPingThread = false;
 		this.playerID++;
 	};
 	
@@ -69,6 +71,8 @@ public class Game implements GameRMI {
 			
 			// Generate or get players/treasures
 			if(playersInfo.size() == 1) {
+				System.out.println("Stepping up has primary server");
+				
 				// First player's position can be anywhere on the grid
 				Random random = new Random();
 				players.add(new Player(playerHost, playerPort, playerName, random.nextInt(Game.N - 1), random.nextInt(Game.N - 1), 0, getRandomColor()));
@@ -81,6 +85,9 @@ public class Game implements GameRMI {
 					t.y = pos.y;
 					treasures.add(t);
 				}
+				
+				// SpawnPingThread
+				spawnPingThread();
 			} else {
 				boolean isConnected = false;
 				int i = 0;
@@ -111,6 +118,8 @@ public class Game implements GameRMI {
 					
 				if(!isConnected) {
 					try {
+						System.out.println("Stepping up has primary server");
+						
 						// Reset Tracker
 						trackerRMIRef.removeAllPreviousPlayers(this.playerName);
 						
@@ -126,7 +135,9 @@ public class Game implements GameRMI {
 							t.y = pos.y;
 							treasures.add(t);
 						}
-						//screen.init(players, treasures);
+						
+						// SpawnPingThread
+						spawnPingThread();
 					} catch (Exception e) {
 						System.out.println("Game init error: Player " + this.playerName + " failed to removeAllPlayers on Tracker.");
 					}				
@@ -146,10 +157,6 @@ public class Game implements GameRMI {
 			frame.pack();
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
-			
-			// SpawnPingThread
-			if(players.size() == 1) spawnPingThread();
-			
 		} catch (Exception e) {
 			System.err.println("Game: init() error.");
 			e.printStackTrace();
@@ -174,9 +181,14 @@ public class Game implements GameRMI {
 		
 		// If not primary server, assume role as server
 		if(!players.firstElement().name.equals(this.playerName)) {
+			System.out.println("Stepping up has primary server");
+			
 			while(!players.firstElement().name.equals(this.playerName)) {
 				leaveGame(players.firstElement().name);
 			}
+			
+			// Spawn ping thread
+			spawnPingThread();
 			
 			try {
 				// Also, remove old players from Tracker that might not have been removed through leaveGame()
@@ -184,9 +196,6 @@ public class Game implements GameRMI {
 			} catch (Exception e) {
 				System.err.println("Game makeMove failed: Failed to removeAllPreviousPlayers from Tracker.");
 			}
-			
-			// Spawn ping thread
-			spawnPingThread();
 		}
 		
 		// Repaint server's panel
@@ -226,9 +235,14 @@ public class Game implements GameRMI {
 		
 		// If not primary server, assume role as server
 		if(!players.firstElement().name.equals(this.playerName)) {
+			System.out.println("Stepping up has primary server");
+			
 			while(!players.firstElement().name.equals(this.playerName)) {
 				leaveGame(players.firstElement().name);
 			}
+			
+			// Spawn ping thread
+			spawnPingThread();
 			
 			try {
 				// Also, remove old players from Tracker that might not have been removed through leaveGame()
@@ -236,9 +250,6 @@ public class Game implements GameRMI {
 			} catch (Exception e) {
 				System.err.println("Game makeMove failed: Failed to removeAllPreviousPlayers from Tracker.");
 			}
-			
-			// Spawn ping thread
-			spawnPingThread();
 		}
 		
 		// Repaint panel
@@ -292,6 +303,8 @@ public class Game implements GameRMI {
 	
 	@Override
 	public void spawnPingThread() {
+		if(hasSpawnedPingThread) return;
+		
 		System.out.println("spawnPingThread");
 		
 		// Spawn thread to run pings
@@ -307,6 +320,8 @@ public class Game implements GameRMI {
 		
 		// Start thread
 		loop.start();
+		
+		hasSpawnedPingThread = true;
 	}
 	
 	@Override
@@ -348,7 +363,7 @@ public class Game implements GameRMI {
 				System.out.println("contactServerToMove failed: Primary Player " + p.name + " could not be contacted. Contacting next player...");
 				
 				try {
-					Thread.sleep(10);
+					Thread.sleep(100);
 				} catch (Exception e2) {
 					
 				}
@@ -392,8 +407,6 @@ public class Game implements GameRMI {
 					catch (Exception e2) {
 						System.out.println("pingAllPlayers: Array index out of bounds or leaveGame() error.");
 					}
-					
-					updateBackupServer();
 				}
 			}
 			
@@ -437,8 +450,10 @@ public class Game implements GameRMI {
 			try {
 				GameRMI gRMI = (GameRMI) registry.lookup(playerName);
 				gRMI.updateGameState(players, treasures);
+				
+				System.out.println("Update backup server Player " + playerName + " succeeded.");
 			} catch (Exception e) {
-				System.out.println("updateBackupServer failed: Failed to updateBackupPlayer.");
+				System.out.println("updateBackupServer failed: Failed to updateBackupPlayer Player " + playerName);
 			}
 		}
 	}

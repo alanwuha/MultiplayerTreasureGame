@@ -1,0 +1,17 @@
+Welcome to the game!
+Contacting Player "al" to join game...
+Join game error: Failed to contact Player al to join game.
+Contacting Player "ay" to join game...
+Successfully contact Player "ay" to join game.
+Player ay has left the game!
+spawnPingThread
+Ping to Player ba failed. Removing Player ba
+Player ba has left the game!
+Score: 1
+updateBackupServer failed: Failed to updateBackupPlayer Player bb
+Player bc has joined the game!
+Player bd has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bb
+updateBackupServer failed: Failed to updateBackupPlayer Player bb
+Ping to Player bb failed. Removing Player bb
+Player bb has left the game!

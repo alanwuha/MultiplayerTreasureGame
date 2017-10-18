@@ -1,0 +1,51 @@
+Welcome to the game!
+Contacting Player "az" to join game...
+Successfully contact Player "az" to join game.
+contactServerToMove failed: Primary Player az could not be contacted. Contacting next player...
+Score: 1
+Stepping up has primary server
+Player be has joined the game!
+Player bf has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+Player az has left the game!
+spawnPingThread
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+Ping to Player bd failed. Removing Player bd
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Player bd has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+Update backup server Player be succeeded.
+updateBackupServer failed: Failed to updateBackupPlayer Player bd
+Ping to Player bf failed. Removing Player bf
+Update backup server Player be succeeded.
+Player bf has left the game!
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Update backup server Player be succeeded.
+Player bg has joined the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player be
+Ping to Player be failed. Removing Player be
+Update backup server Player bg succeeded.
+Player be has left the game!
+updateBackupServer failed: Failed to updateBackupPlayer Player be
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.
+Update backup server Player bg succeeded.

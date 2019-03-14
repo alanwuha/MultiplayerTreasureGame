@@ -1,9 +1,0 @@
-Welcome to the game!
-Contacting Player "bj" to join game...
-Join game error: Failed to contact Player bj to join game.
-Contacting Player "bn" to join game...
-Successfully contact Player "bn" to join game.
-Exception in thread "main" java.util.NoSuchElementException
-	at java.util.Scanner.throwFor(Unknown Source)
-	at java.util.Scanner.next(Unknown Source)
-	at Game.main(Game.java:559)

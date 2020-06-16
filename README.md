@@ -2,6 +2,8 @@
 
 This is a distributed maze game. The maze is an N-by-N grid, consisting of N by N "cells". Each cell contains either no "treasure" or exactly one "treasure". At the start of the game, there are K treasures placed randomly at the grid.
 
+![snap](./snap.png)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
